@@ -1,0 +1,70 @@
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.units import inch
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
+from reportlab.lib.enums import TA_CENTER
+from datetime import datetime
+import os
+import sys
+
+# Ensure output directory exists and use absolute path that matches the file you opened
+pdf_path = r"C:\Users\Administrator\Documents\y\path\to\your\cv.pdf"
+os.makedirs(os.path.dirname(pdf_path), exist_ok=True)
+
+doc = SimpleDocTemplate(pdf_path, pagesize=letter)
+story = []
+styles = getSampleStyleSheet()
+
+# ...existing code...
+title_style = ParagraphStyle(
+    'CustomTitle',
+    parent=styles['Heading1'],
+    fontSize=24,
+    textColor="#000080",
+    spaceAfter=12,
+    alignment=TA_CENTER,
+    fontName='Helvetica-Bold'
+)
+
+heading_style = ParagraphStyle(
+    'CustomHeading',
+    parent=styles['Heading2'],
+    fontSize=14,
+    textColor="#333333",
+    spaceAfter=6,
+    fontName='Helvetica-Bold'
+)
+
+story.append(Paragraph("JOHN DOE", title_style))
+story.append(Paragraph("Professional CV", styles['Normal']))
+story.append(Spacer(1, 0.2*inch))
+
+story.append(Paragraph("CONTACT INFORMATION", heading_style))
+story.append(Paragraph("Email: john@example.com | Phone: +1-555-0123", styles['Normal']))
+story.append(Spacer(1, 0.1*inch))
+
+story.append(Paragraph("PROFESSIONAL SUMMARY", heading_style))
+story.append(Paragraph("Experienced software developer with 5+ years in web development.", styles['Normal']))
+story.append(Spacer(1, 0.1*inch))
+
+story.append(Paragraph("EXPERIENCE", heading_style))
+story.append(Paragraph("<b>Senior Developer</b> - Tech Company (2020-Present)", styles['Normal']))
+story.append(Paragraph("Led development of multiple projects using Python and JavaScript.", styles['Normal']))
+story.append(Spacer(1, 0.1*inch))
+
+story.append(Paragraph("SKILLS", heading_style))
+story.append(Paragraph("Python, JavaScript, SQL, HTML/CSS, React, Django", styles['Normal']))
+story.append(Spacer(1, 0.1*inch))
+
+story.append(Paragraph("EDUCATION", heading_style))
+story.append(Paragraph("B.S. Computer Science - University (2019)", styles['Normal']))
+
+# Generate PDF with error handling and report file size
+try:
+    doc.build(story)
+    size = os.path.getsize(pdf_path)
+    print(f"CV PDF created successfully: {pdf_path} ({size} bytes)")
+except Exception as e:
+    print("Failed to create PDF:", e)
+    sys.exit(1)
+# ...existing code...

@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV Builder - Buat CV Anda</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+
+        .app-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 450px 1fr;
+            gap: 20px;
+        }
+
+        .editor-panel {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+        }
+
+        .preview-panel {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .editor-header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .editor-header h1 {
+            color: #667eea;
+            font-size: 1.8em;
+            margin-bottom: 5px;
+        }
+
+        .form-section {
+            margin-bottom: 25px;
+        }
+
+        .form-section h3 {
+            color: #667eea;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 0.95em;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9em;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #333;
+            border: 2px solid #e0e0e0;
+        }
+
+        .btn-secondary:hover {
+            background: #e9ecef;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .dynamic-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .dynamic-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .add-btn-container {
+            margin-top: 10px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .action-buttons button {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        /* CV Preview Styles */
+        .cv-container {
+            background: white;
+        }
+
+        .cv-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 50px 40px;
+            text-align: center;
+        }
+
+        .cv-header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .cv-header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .contact-info span {
+            color: white;
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+
+        .cv-content {
+            padding: 40px;
+        }
+
+        .cv-section {
+            margin-bottom: 40px;
+        }
+
+        .cv-section h2 {
+            color: #667eea;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .about-text {
+            font-size: 1.1em;
+            color: #555;
+            line-height: 1.8;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .skill-item {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .experience-item, .education-item {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #764ba2;
+        }
+
+        .experience-item h3, .education-item h3 {
+            color: #333;
+            font-size: 1.3em;
+            margin-bottom: 5px;
+        }
+
+        .experience-item .position, .education-item .degree {
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .experience-item .date, .education-item .date {
+            color: #888;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        .experience-item ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        .experience-item li {
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 20px;
+            color: #999;
+            font-style: italic;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .editor-panel {
+                position: relative;
+                top: 0;
+                max-height: none;
+            }
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .editor-panel {
+                display: none;
+            }
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+            .preview-panel {
+                box-shadow: none;
+            }
+        }
+
+        /* Photo upload */
+        .photo-upload {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .photo-preview {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 10px;
+            border: 4px solid #667eea;
+            overflow: hidden;
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .photo-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .photo-placeholder {
+            font-size: 3em;
+            color: #ccc;
+        }
+
+        /* Collapsible sections */
+        .collapsible-header {
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .collapsible-header::after {
+            content: '▼';
+            transition: transform 0.3s;
+        }
+
+        .collapsible-header.collapsed::after {
+            transform: rotate(-90deg);
+        }
+
+        .collapsible-content {
+            max-height: 2000px;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .collapsible-content.collapsed {
+            max-height: 0;
+        }
+
+        .photo-in-cv {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 20px auto;
+            border: 5px solid rgba(255,255,255,0.3);
+            overflow: hidden;
+        }
+
+        .photo-in-cv img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Editor Panel -->
+        <div class="editor-panel">
+            <div class="editor-header">
+                <h1>✏️ CV Builder</h1>
+                <p>Buat CV profesional Anda</p>
+            </div>
+
+            <!-- Photo Upload -->
+            <div class="form-section">
+                <h3>📸 Foto Profil</h3>
+                <div class="photo-upload">
+                    <div class="photo-preview" id="photoPreview">
+                        <span class="photo-placeholder">👤</span>
+                    </div>
+                    <input type="file" id="photoInput" accept="image/*" style="display: none;">
+                    <button class="btn btn-secondary" onclick="document.getElementById('photoInput').click()">
+                        Upload Foto
+                    </button>
+                </div>
+            </div>
+
+            <!-- Personal Info -->
+            <div class="form-section">
+                <h3 class="collapsible-header" onclick="toggleSection(this)">👤 Informasi Pribadi</h3>
+                <div class="collapsible-content">
+                    <div class="form-group">
+                        <label>Nama Lengkap *</label>
+                        <input type="text" id="fullName" placeholder="John Doe" onchange="updatePreview()">
+                    </div>
+                    <div class="form-group">
+                        <label>Profesi / Job Title *</label>
+                        <input type="text" id="jobTitle" placeholder="Web Developer" onchange="updatePreview()">
+                    </div>
+                    <div class="form-group">
+                        <label>Email *</label>
+                        <input type="email" id="email" placeholder="email@example.com" onchange="updatePreview()">
+                    </div>
+                    <div class="form-group">
+                        <label>Telepon *</label>
+                        <input type="tel" id="phone" placeholder="+62 812-3456-7890" onchange="updatePreview()">
+                    </div>
+                    <div class="form-group">
+                        <label>LinkedIn (opsional)</label>
+                        <input type="url" id="linkedin" placeholder="https://linkedin.com/in/username" onchange="updatePreview()">
+                    </div>
+                    <div class="form-group">
+                        <label>GitHub/Portfolio (opsional)</label>
+                        <input type="url" id="github" placeholder="https://github.com/username" onchange="updatePreview()">
+                    </div>
+                    <div class="form-group">
+                        <label>Website (opsional)</label>
+                        <input type="url" id="website" placeholder="https://yourwebsite.com" onchange="updatePreview()">
+                    </div>
+                    <div class="form-group">
+                        <label>Lokasi</label>
+                        <input type="text" id="location" placeholder="Jakarta, Indonesia" onchange="updatePreview()">
+                    </div>
+                </div>
+            </div>
+
+            <!-- About -->
+            <div class="form-section">
+                <h3 class="collapsible-header" onclick="toggleSection(this)">📝 Tentang Saya</h3>
+                <div class="collapsible-content">
+                    <div class="form-group">
+                        <label>Deskripsi Singkat</label>
+                        <textarea id="about" placeholder="Ceritakan tentang diri Anda, pengalaman, dan passion Anda..." onchange="updatePreview()"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Skills -->
+            <div class="form-section">
+                <h3 class="collapsible-header" onclick="toggleSection(this)">💡 Keahlian</h3>
+                <div class="collapsible-content">
+                    <div id="skillsList"></div>
+                    <div class="add-btn-container">
+                        <button class="btn btn-secondary" onclick="addSkill()">+ Tambah Keahlian</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Experience -->
+            <div class="form-section">
+                <h3 class="collapsible-header" onclick="toggleSection(this)">💼 Pengalaman Kerja</h3>
+                <div class="collapsible-content">
+                    <div id="experienceList"></div>
+                    <div class="add-btn-container">
+                        <button class="btn btn-secondary" onclick="addExperience()">+ Tambah Pengalaman</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Education -->
+            <div class="form-section">
+                <h3 class="collapsible-header" onclick="toggleSection(this)">🎓 Pendidikan</h3>
+                <div class="collapsible-content">
+                    <div id="educationList"></div>
+                    <div class="add-btn-container">
+                        <button class="btn btn-secondary" onclick="addEducation()">+ Tambah Pendidikan</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Certifications -->
+            <div class="form-section">
+                <h3 class="collapsible-header" onclick="toggleSection(this)">🏆 Sertifikat & Penghargaan</h3>
+                <div class="collapsible-content">
+                    <div id="certificationList"></div>
+                    <div class="add-btn-container">
+                        <button class="btn btn-secondary" onclick="addCertification()">+ Tambah Sertifikat</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="btn btn-success" onclick="downloadCV()">📥 Download CV</button>
+                <button class="btn btn-primary" onclick="saveData()">💾 Simpan Data</button>
+                <button class="btn btn-secondary" onclick="loadData()">📂 Muat Data</button>
+                <button class="btn btn-danger" onclick="resetForm()">🔄 Reset</button>
+            </div>
+        </div>
+
+        <!-- Preview Panel -->
+        <div class="preview-panel">
+            <div class="cv-container" id="cvPreview">
+                <!-- CV Header -->
+                <div class="cv-header">
+                    <div class="photo-in-cv" id="cvPhoto" style="display: none;">
+                        <img src="" alt="Profile Photo">
+                    </div>
+                    <h1 id="previewName">Nama Lengkap Anda</h1>
+                    <p id="previewTitle">Profesi / Job Title</p>
+                    
+                    <div class="contact-info" id="contactInfo">
+                        <span>📧 email@example.com</span>
+                        <span>📱 +62 812-3456-7890</span>
+                    </div>
+                </div>
+
+                <!-- CV Content -->
+                <div class="cv-content">
+                    <!-- About Section -->
+                    <section class="cv-section" id="aboutSection" style="display: none;">
+                        <h2>Tentang Saya</h2>
+                        <p class="about-text" id="previewAbout"></p>
+                    </section>
+
+                    <!-- Skills Section -->
+                    <section class="cv-section" id="skillsSection" style="display: none;">
+                        <h2>Keahlian</h2>
+                        <div class="skills-grid" id="previewSkills"></div>
+                    </section>
+
+                    <!-- Experience Section -->
+                    <section class="cv-section" id="experienceSection" style="display: none;">
+                        <h2>Pengalaman Kerja</h2>
+                        <div id="previewExperience"></div>
+                    </section>
+
+                    <!-- Education Section -->
+                    <section class="cv-section" id="educationSection" style="display: none;">
+                        <h2>Pendidikan</h2>
+                        <div id="previewEducation"></div>
+                    </section>
+
+                    <!-- Certifications Section -->
+                    <section class="cv-section" id="certificationSection" style="display: none;">
+                        <h2>Sertifikat & Penghargaan</h2>
+                        <div id="previewCertification"></div>
+                    </section>
+
+                    <!-- Empty State -->
+                    <div class="empty-state" id="emptyState">
+                        <p>👆 Mulai isi form di sebelah kiri untuk membuat CV Anda</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data storage
+        let cvData = {
+            photo: '',
+            fullName: '',
+            jobTitle: '',
+            email: '',
+            phone: '',
+            linkedin: '',
+            github: '',
+            website: '',
+            location: '',
+            about: '',
+            skills: [],
+            experiences: [],
+            education: [],
+            certifications: []
+        };
+
+        // Photo handling
+        document.getElementById('photoInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    cvData.photo = event.target.result;
+                    document.getElementById('photoPreview').innerHTML = `<img src="${event.target.result}" alt="Profile">`;
+                    updatePreview();
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Toggle collapsible sections
+        function toggleSection(header) {
+            header.classList.toggle('collapsed');
+            const content = header.nextElementSibling;
+            content.classList.toggle('collapsed');
+        }
+
+        // Add skill
+        function addSkill() {
+            const id = Date.now();
+            cvData.skills.push({ id, category: '', items: '' });
+            renderSkills();
+            updatePreview();
+        }
+
+        function removeSkill(id) {
+            cvData.skills = cvData.skills.filter(s => s.id !== id);
+            renderSkills();
+            updatePreview();
+        }
+
+        function renderSkills() {
+            const container = document.getElementById('skillsList');
+            if (cvData.skills.length === 0) {
+                container.innerHTML = '<p style="color: #999; text-align: center;">Belum ada keahlian. Klik tombol di bawah untuk menambah.</p>';
+                return;
+            }
+            
+            container.innerHTML = cvData.skills.map(skill => `
+                <div class="dynamic-item">
+                    <div class="dynamic-item-header">
+                        <strong>Keahlian #${cvData.skills.indexOf(skill) + 1}</strong>
+                        <button class="btn btn-danger" style="padding: 5px 10px; font-size: 0.8em;" onclick="removeSkill(${skill.id})">Hapus</button>
+                    </div>
+                    <div class="form-group">
+                        <label>Kategori (mis: Frontend, Backend)</label>
+                        <input type="text" value="${skill.category}" onchange="updateSkill(${skill.id}, 'category', this.value)">
+                    </div>
+                    <div class="form-group">
+                        <label>Keahlian (pisahkan dengan koma)</label>
+                        <input type="text" value="${skill.items}" placeholder="HTML, CSS, JavaScript" onchange="updateSkill(${skill.id}, 'items', this.value)">
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateSkill(id, field, value) {
+            const skill = cvData.skills.find(s => s.id === id);
+            if (skill) {
+                skill[field] = value;
+                updatePreview();
+            }
+        }
+
+        // Add experience
+        function addExperience() {
+            const id = Date.now();
+            cvData.experiences.push({
+                id,
+                company: '',
+                position: '',
+                startDate: '',
+                endDate: '',
+                current: false,
+                description: ''
+            });
+            renderExperiences();
+            updatePreview();
+        }
+
+        function removeExperience(id) {
+            cvData.experiences = cvData.experiences.filter(e => e.id !== id);
+            renderExperiences();
+            updatePreview();
+        }
+
+        function renderExperiences() {
+            const container = document.getElementById('experienceList');
+            if (cvData.experiences.length === 0) {
+                container.innerHTML = '<p style="color: #999; text-align: center;">Belum ada pengalaman. Klik tombol di bawah untuk menambah.</p>';
+                return;
+            }
+            
+            container.innerHTML = cvData.experiences.map(exp => `
+                <div class="dynamic-item">
+                    <div class="dynamic-item-header">
+                        <strong>Pengalaman #${cvData.experiences.indexOf(exp) + 1}</strong>
+                        <button class="btn btn-danger" style="padding: 5px 10px; font-size: 0.8em;" onclick="removeExperience(${exp.id})">Hapus</button>
+                    </div>
+                    <div class="form-group">
+                        <label>Nama Perusahaan / Project</label>
+                        <input type="text" value="${exp.company}" onchange="updateExperience(${exp.id}, 'company', this.value)">
+                    </div>
+                    <div class="form-group">
+                        <label>Posisi</label>
+                        <input type="text" value="${exp.position}" onchange="updateExperience(${exp.id}, 'position', this.value)">
+                    </div>
+                    <div class="form-group">
+                        <label>Tanggal Mulai</label>
+                        <input type="month" value="${exp.startDate}" onchange="updateExperience(${exp.id}, 'startDate', this.value)">
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" ${exp.current ? 'checked' : ''} onchange="updateExperience(${exp.id}, 'current', this.checked)">
+                            Saat ini masih bekerja di sini
+                        </label>
+                    </div>
+                    <div class="form-group" style="display: ${exp.current ? 'none' : 'block'};">
+                        <label>Tanggal Selesai</label>
+                        <input type="month" value="${exp.endDate}" onchange="updateExperience(${exp.id}, 'endDate', this.value)">
+                    </div>
+                    <div class="form-group">
+                        <label>Deskripsi & Tanggung Jawab (pisahkan dengan enter untuk bullet points)</label>
+                        <textarea onchange="updateExperience(${exp.id}, 'description', this.value)">${exp.description}</textarea>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateExperience(id, field, value) {
+            const exp = cvData.experiences.find(e => e.id === id);
+            if (exp) {
+                exp[field] = value;
+                if (field === 'current') {
+                    renderExperiences();
+                }
+                updatePreview();
+            }
+        }
+
+        // Add education
+        function addEducation() {
+            const id = Date.now();
+            cvData.education.push({
+                id,
+                institution: '',
+                degree: '',
+                field: '',
+                startDate: '',
+                endDate: '',
+                gpa: '',
+                description: ''
+            });
+            renderEducation();
+            updatePreview();
+        }
+
+        function removeEducation(id) {
+            cvData.education = cvData.education.filter(e => e.id !== id);
+            renderEducation();
+            updatePreview();
+        }
+
+        function renderEducation() {
+            const container = document.getElementById('educationList');
+            if (cvData.education.length === 0) {
+                container.innerHTML = '<p style="color: #999; text-align: center;">Belum ada pendidikan. Klik tombol di bawah untuk menambah.</p>';
+                return;
+            }
+            
+            container.innerHTML = cvData.education.map(edu => `
+                <div class="dynamic-item">
+                    <div class="dynamic-item-header">
+                        <strong>Pendidikan #${cvData.education.indexOf(edu) + 1}</strong>
+                        <button class="btn btn-danger" style="padding: 5px 10px; font-size: 0.8em;" onclick="removeEducation(${edu.id})">Hapus</button>
+                    </div>
+                    <div class="form-group">
+                        <label>Nama Institusi / Universitas</label>
+                        <input type="text" value="${edu.institution}" onchange="updateEducation(${edu.id}, 'institution', this.value)">
+                    </div>
+                    <div class="form-group">
+                        <label>Jenjang (S1, S2, D3, dll)</label>
+                        <input type="text" value="${edu.degree}" onchange="updateEducation(${edu.id}, 'degree', this.value)">
+                    </div>
+                    <div class="form-group">
+                        <label>Jurusan / Bidang Studi</label>
+                        <input type="text" value="${edu.field}" onchange="updateEducation(${edu.id}, 'field', this.value)">
+                    </div>
+                    <div class="form-group">
+                        <label>Tahun Mulai</label>
+                        <input type="number" value="${edu.startDate}" placeholder="2019" onchange="updateEducation(${edu.id}, 'startDate', this.value)">
+                    </div>
+                    <div class="form-group">
+                        <label>Tahun Selesai</label>
+                        <input type="number" value="${edu.endDate}" placeholder="2023" onchange="updateEducation(${edu.id}, 'endDate', this.value)">
+                    </div>
+                    <div class="form-group">
+                        <label>IPK (opsional)</label>
+                        <input type="text" value="${edu.gpa}" placeholder="3.75" onchange="updateEducation(${edu.id}, 'gpa', this.value)">
+                    </div>
+                    <div class="form-group">
+                        <label>Keterangan Tambahan (opsional)</label>
+                        <textarea onchange="updateEducation(${edu.id}, 'description', this.value)">${edu.description}</textarea>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateEducation(id, field, value) {
+            const edu = cvData.education.find(e => e.id === id);
+            if (edu) {
+                edu[field] = value;
+                updatePreview();
+            }
+        }
+
+        // Add certification
+        function addCertification() {
+            const id = Date.now();
+            cvData.certifications.push({
+                id,
+                name: '',
+                issuer: '',
+                date: '',
+                credential: ''
+            });
+            renderCertifications();
+            updatePreview();
+        }
+
+        function removeCertification(id) {
+            cvData.certifications = cvData.certifications.filter(c => c.id !== id);
+            renderCertifications();
+            updatePreview();
+        }
+
+        function renderCertifications() {
+            const container = document.getElementById('certificationList');
+            if (cvData.certifications.length === 0) {
+                container.innerHTML = '<p style="color: #999; text-align: center;">Belum ada sertifikat. Klik tombol di bawah untuk menambah.</p>';
+                return;
+            }
+            
+            container.innerHTML = cvData.certifications.map(cert => `
+                <div class="dynamic-item">
+                    <div class="dynamic-item-header">
+                        <strong>Sertifikat #${cvData.certifications.indexOf(cert) + 1}</strong>
+                        <button class="btn btn-danger" style="padding: 5px 10px; font-size: 0.8em;" onclick="removeCertification(${cert.id})">Hapus</button>
+                    </div>
+                    <div class="form-group">
+                        <label>Nama Sertifikat / Penghargaan</label>
+                        <input type="text" value="${cert.name}" onchange="updateCertification(${cert.id}, 'name', this.value)">
+                    </div>
+                    <div class="form-group">
+                        <label>Penerbit / Organisasi</label>
+                        <input type="text" value="${cert.issuer}" onchange="updateCertification(${cert.id}, 'issuer', this.value)">
+                    </div>
+                    <div class="form-group">
+                        <label>Tanggal</label>
+                        <input type="month" value="${cert.date}" onchange="updateCertification(${cert.id}, 'date', this.value)">
+                    </div>
+                    <div class="form-group">
+                        <label>ID Kredensial / Link (opsional)</label>
+                        <input type="text" value="${cert.credential}" onchange="updateCertification(${cert.id}, 'credential', this.value)">
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateCertification(id, field, value) {
+            const cert = cvData.certifications.find(c => c.id === id);
+            if (cert) {
+                cert[field] = value;
+                updatePreview();
+            }
+        }
+
+        // Update preview
+        function updatePreview() {
+            // Update personal info from inputs
+            cvData.fullName = document.getElementById('fullName').value;
+            cvData.jobTitle = document.getElementById('jobTitle').value;
+            cvData.email = document.getElementById('email').value;
+            cvData.phone = document.getElementById('phone').value;
+            cvData.linkedin = document.getElementById('linkedin').value;
+            cvData.github = document.getElementById('github').value;
+            cvData.website = document.getElementById('website').value;
+            cvData.location = document.getElementById('location').value;
+            cvData.about = document.getElementById('about').value;
+
+            // Update header
+            document.getElementById('previewName').textContent = cvData.fullName || 'Nama Lengkap Anda';
+            document.getElementById('previewTitle').textContent = cvData.jobTitle || 'Profesi / Job Title';
+
+            // Update photo
+            const cvPhoto = document.getElementById('cvPhoto');
+            if (cvData.photo) {
+                cvPhoto.style.display = 'block';
+                cvPhoto.querySelector('img').src = cvData.photo;
+            } else {
+                cvPhoto.style.display = 'none';
+            }
+
+            // Update contact info
+            let contactHTML = '';
+            if (cvData.email) contactHTML += `<span>📧 ${cvData.email}</span>`;
+            if (cvData.phone) contactHTML += `<span>📱 ${cvData.phone}</span>`;
+            if (cvData.location) contactHTML += `<span>📍 ${cvData.location}</span>`;
+            if (cvData.linkedin) contactHTML += `<span>💼 LinkedIn</span>`;
+            if (cvData.github) contactHTML += `<span>💻 GitHub</span>`;
+            if (cvData.website) contactHTML += `<span>🌐 Website</span>`;
+            
+            document.getElementById('contactInfo').innerHTML = contactHTML || '<span>📧 email@example.com</span><span>📱 +62 812-3456-7890</span>';
+
+            // Update about section
+            const aboutSection = document.getElementById('aboutSection');
+            if (cvData.about) {
+                aboutSection.style.display = 'block';
+                document.getElementById('previewAbout').textContent = cvData.about;
+            } else {
+                aboutSection.style.display = 'none';
+            }
+
+            // Update skills
+            const skillsSection = document.getElementById('skillsSection');
+            if (cvData.skills.length > 0 && cvData.skills.some(s => s.category && s.items)) {
+                skillsSection.style.display = 'block';
+                document.getElementById('previewSkills').innerHTML = cvData.skills
+                    .filter(s => s.category && s.items)
+                    .map(skill => `
+                        <div class="skill-item">
+                            <strong>${skill.category}:</strong> ${skill.items}
+                        </div>
+                    `).join('');
+            } else {
+                skillsSection.style.display = 'none';
+            }
+
+            // Update experience
+            const experienceSection = document.getElementById('experienceSection');
+            if (cvData.experiences.length > 0 && cvData.experiences.some(e => e.company)) {
+                experienceSection.style.display = 'block';
+                document.getElementById('previewExperience').innerHTML = cvData.experiences
+                    .filter(exp => exp.company)
+                    .map(exp => {
+                        const startDate = exp.startDate ? new Date(exp.startDate).toLocaleDateString('id-ID', { year: 'numeric', month: 'long' }) : '';
+                        const endDate = exp.current ? 'Sekarang' : (exp.endDate ? new Date(exp.endDate).toLocaleDateString('id-ID', { year: 'numeric', month: 'long' }) : '');
+                        const dateStr = startDate && endDate ? `${startDate} - ${endDate}` : '';
+                        
+                        const descriptions = exp.description ? exp.description.split('\n').filter(d => d.trim()) : [];
+                        
+                        return `
+                            <div class="experience-item">
+                                <h3>${exp.company}</h3>
+                                ${exp.position ? `<div class="position">${exp.position}</div>` : ''}
+                                ${dateStr ? `<div class="date">${dateStr}</div>` : ''}
+                                ${descriptions.length > 0 ? `
+                                    <ul>
+                                        ${descriptions.map(d => `<li>${d}</li>`).join('')}
+                                    </ul>
+                                ` : ''}
+                            </div>
+                        `;
+                    }).join('');
+            } else {
+                experienceSection.style.display = 'none';
+            }
+
+            // Update education
+            const educationSection = document.getElementById('educationSection');
+            if (cvData.education.length > 0 && cvData.education.some(e => e.institution)) {
+                educationSection.style.display = 'block';
+                document.getElementById('previewEducation').innerHTML = cvData.education
+                    .filter(edu => edu.institution)
+                    .map(edu => {
+                        const dateStr = edu.startDate && edu.endDate ? `${edu.startDate} - ${edu.endDate}` : '';
+                        const degreeStr = [edu.degree, edu.field].filter(Boolean).join(' - ');
+                        
+                        return `
+                            <div class="education-item">
+                                <h3>${edu.institution}</h3>
+                                ${degreeStr ? `<div class="degree">${degreeStr}</div>` : ''}
+                                ${dateStr ? `<div class="date">${dateStr}</div>` : ''}
+                                ${edu.gpa || edu.description ? `
+                                    <p>${[edu.gpa ? `IPK: ${edu.gpa}` : '', edu.description].filter(Boolean).join(' | ')}</p>
+                                ` : ''}
+                            </div>
+                        `;
+                    }).join('');
+            } else {
+                educationSection.style.display = 'none';
+            }
+
+            // Update certifications
+            const certificationSection = document.getElementById('certificationSection');
+            if (cvData.certifications.length > 0 && cvData.certifications.some(c => c.name)) {
+                certificationSection.style.display = 'block';
+                document.getElementById('previewCertification').innerHTML = cvData.certifications
+                    .filter(cert => cert.name)
+                    .map(cert => {
+                        const dateStr = cert.date ? new Date(cert.date).toLocaleDateString('id-ID', { year: 'numeric', month: 'long' }) : '';
+                        
+                        return `
+                            <div class="education-item">
+                                <h3>${cert.name}</h3>
+                                ${cert.issuer ? `<div class="degree">${cert.issuer}</div>` : ''}
+                                ${dateStr ? `<div class="date">${dateStr}</div>` : ''}
+                                ${cert.credential ? `<p>Kredensial: ${cert.credential}</p>` : ''}
+                            </div>
+                        `;
+                    }).join('');
+            } else {
+                certificationSection.style.display = 'none';
+            }
+
+            // Show/hide empty state
+            const hasContent = cvData.fullName || cvData.about || cvData.skills.length > 0 || 
+                             cvData.experiences.length > 0 || cvData.education.length > 0 || cvData.certifications.length > 0;
+            document.getElementById('emptyState').style.display = hasContent ? 'none' : 'block';
+        }
+
+        // Download CV
+        function downloadCV() {
+            if (!cvData.fullName) {
+                alert('Mohon isi nama lengkap terlebih dahulu!');
+                return;
+            }
+            window.print();
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('cvData', JSON.stringify(cvData));
+            alert('✅ Data berhasil disimpan! Data akan tersimpan di browser Anda.');
+        }
+
+        // Load data from localStorage
+        function loadData() {
+            const saved = localStorage.getItem('cvData');
+            if (saved) {
+                cvData = JSON.parse(saved);
+                
+                // Restore form values
+                document.getElementById('fullName').value = cvData.fullName || '';
+                document.getElementById('jobTitle').value = cvData.jobTitle || '';
+                document.getElementById('email').value = cvData.email || '';
+                document.getElementById('phone').value = cvData.phone || '';
+                document.getElementById('linkedin').value = cvData.linkedin || '';
+                document.getElementById('github').value = cvData.github || '';
+                document.getElementById('website').value = cvData.website || '';
+                document.getElementById('location').value = cvData.location || '';
+                document.getElementById('about').value = cvData.about || '';
+                
+                // Restore photo
+                if (cvData.photo) {
+                    document.getElementById('photoPreview').innerHTML = `<img src="${cvData.photo}" alt="Profile">`;
+                }
+                
+                // Render dynamic sections
+                renderSkills();
+                renderExperiences();
+                renderEducation();
+                renderCertifications();
+                updatePreview();
+                
+                alert('✅ Data berhasil dimuat!');
+            } else {
+                alert('❌ Tidak ada data tersimpan.');
+            }
+        }
+
+        // Reset form
+        function resetForm() {
+            if (confirm('Apakah Anda yakin ingin mereset semua data? Data yang belum disimpan akan hilang.')) {
+                cvData = {
+                    photo: '',
+                    fullName: '',
+                    jobTitle: '',
+                    email: '',
+                    phone: '',
+                    linkedin: '',
+                    github: '',
+                    website: '',
+                    location: '',
+                    about: '',
+                    skills: [],
+                    experiences: [],
+                    education: [],
+                    certifications: []
+                };
+                
+                document.getElementById('photoPreview').innerHTML = '<span class="photo-placeholder">👤</span>';
+                document.getElementById('fullName').value = '';
+                document.getElementById('jobTitle').value = '';
+                document.getElementById('email').value = '';
+                document.getElementById('phone').value = '';
+                document.getElementById('linkedin').value = '';
+                document.getElementById('github').value = '';
+                document.getElementById('website').value = '';
+                document.getElementById('location').value = '';
+                document.getElementById('about').value = '';
+                
+                renderSkills();
+                renderExperiences();
+                renderEducation();
+                renderCertifications();
+                updatePreview();
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            renderSkills();
+            renderExperiences();
+            renderEducation();
+            renderCertifications();
+            updatePreview();
+            
+            // Try to load saved data
+            const saved = localStorage.getItem('cvData');
+            if (saved) {
+                const loadOnStart = confirm('Ditemukan data CV tersimpan. Muat data sebelumnya?');
+                if (loadOnStart) {
+                    loadData();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

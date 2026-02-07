@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Portal Pembelajaran Web Development</title>
+<style>
+  :root{
+    --gap: 20px;
+    --card-bg: #fff;
+    --accent: #6C63FF;
+    --accent-2: #FF6584;
+    --accent-3: #4ECDC4;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:Inter, system-ui, sans-serif;
+    background:#0f1724;
+    color:#0b1220;
+    padding:40px 20px;
+    min-height:100vh;
+  }
+  
+  /* Header Section */
+  .header{
+    max-width:1100px;
+    margin:0 auto 50px;
+    text-align:center;
+  }
+  .header h1{
+    font-size:clamp(28px, 5vw, 48px);
+    background:linear-gradient(135deg, #6C63FF, #9B8CFF, #FF6584);
+    -webkit-background-clip:text;
+    background-clip:text;
+    -webkit-text-fill-color:transparent;
+    margin-bottom:16px;
+    font-weight:700;
+  }
+  .header p{
+    color:#A9B0D9;
+    font-size:clamp(14px, 2vw, 18px);
+    max-width:600px;
+    margin:0 auto;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:var(--gap);
+    max-width:1100px;
+    margin:0 auto;
+  }
+  
+  .card{
+    background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+    border-radius:16px;
+    padding:24px;
+    backdrop-filter: blur(10px);
+    box-shadow:0 8px 24px rgba(2,6,23,0.6);
+    transform-origin:center;
+    transform: translateY(20px) scale(.96) rotateX(8deg);
+    opacity:0;
+    transition:all .3s cubic-bezier(.2,.9,.2,1);
+    overflow:hidden;
+    border:1px solid rgba(255,255,255,0.06);
+    position:relative;
+    cursor:pointer;
+  }
+  
+  /* Glow effect on hover */
+  .card::before{
+    content:'';
+    position:absolute;
+    top:0;left:0;right:0;bottom:0;
+    background:linear-gradient(135deg, var(--accent), transparent);
+    opacity:0;
+    transition:opacity .3s;
+    pointer-events:none;
+    border-radius:16px;
+  }
+  .card:hover::before{opacity:0.08}
+  
+  .card:hover{
+    transform: translateY(-12px) scale(1.03);
+    box-shadow:0 20px 50px rgba(108,99,255,0.2);
+    border-color:rgba(108,99,255,0.3);
+  }
+
+  /* Staggered entrance animation */
+  .ready .card{
+    animation: popIn .7s cubic-bezier(.2,.9,.2,1) forwards;
+  }
+  .card:nth-child(1){animation-delay:.08s}
+  .card:nth-child(2){animation-delay:.16s}
+  .card:nth-child(3){animation-delay:.24s}
+  .card:nth-child(4){animation-delay:.32s}
+  .card:nth-child(5){animation-delay:.40s}
+  .card:nth-child(6){animation-delay:.48s}
+  
+  @keyframes popIn{
+    from{opacity:0; transform: translateY(20px) scale(.94) rotateX(8deg)}
+    to  {opacity:1; transform: translateY(0) scale(1) rotateX(0)}
+  }
+
+  /* Subtle floating animation */
+  .float{
+    animation: floaty 8s ease-in-out infinite;
+    will-change: transform;
+  }
+  .card:nth-child(2n) .float{animation-delay:-2s}
+  .card:nth-child(3n) .float{animation-delay:-4s}
+  
+  @keyframes floaty{
+    0%, 100%{transform:translateY(0) rotateZ(-0.3deg)}
+    50%{transform:translateY(-8px) rotateZ(0.8deg)}
+  }
+
+  /* Icon styling */
+  .icon{
+    width:50px;
+    height:50px;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:24px;
+    margin-bottom:16px;
+    background:linear-gradient(135deg, var(--accent), #9B8CFF);
+    box-shadow:0 4px 12px rgba(108,99,255,0.3);
+  }
+  .card:nth-child(2) .icon{background:linear-gradient(135deg, var(--accent-2), #FF8FA3)}
+  .card:nth-child(3) .icon{background:linear-gradient(135deg, var(--accent-3), #6FDDD5)}
+  .card:nth-child(4) .icon{background:linear-gradient(135deg, #FFD93D, #FFAD33)}
+  .card:nth-child(5) .icon{background:linear-gradient(135deg, #A18AFF, #C9AAFF)}
+  .card:nth-child(6) .icon{background:linear-gradient(135deg, #FF6B9D, #FFA5BE)}
+
+  .title{
+    font-weight:700;
+    color:#E6E9FF;
+    margin-bottom:10px;
+    font-size:20px;
+  }
+  
+  .desc{
+    font-size:14px;
+    color:#A9B0D9;
+    line-height:1.6;
+    margin-bottom:16px;
+  }
+  
+  .features{
+    list-style:none;
+    margin-bottom:16px;
+  }
+  .features li{
+    font-size:13px;
+    color:#8B92B5;
+    padding:6px 0;
+    padding-left:20px;
+    position:relative;
+  }
+  .features li::before{
+    content:'✓';
+    position:absolute;
+    left:0;
+    color:var(--accent);
+    font-weight:bold;
+  }
+  
+  .badge{
+    display:inline-block;
+    padding:6px 14px;
+    background:linear-gradient(90deg,var(--accent),#9B8CFF);
+    color:#fff;
+    border-radius:999px;
+    font-size:11px;
+    font-weight:600;
+    margin-top:8px;
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+  }
+  .badge.popular{background:linear-gradient(90deg,var(--accent-2),#FF8FA3)}
+  .badge.trending{background:linear-gradient(90deg,var(--accent-3),#6FDDD5)}
+
+  /* Footer */
+  .footer{
+    max-width:1100px;
+    margin:60px auto 0;
+    text-align:center;
+    color:#6B7299;
+    font-size:14px;
+  }
+
+  /* Responsive */
+  @media (max-width:640px){
+    body{padding:20px 12px}
+    .header{margin-bottom:30px}
+    .card{padding:20px}
+  }
+</style>
+</head>
+<body>
+  <div class="header">
+    <h1>Portal Pembelajaran Web Development</h1>
+    <p>Kuasai teknologi web modern dengan materi lengkap dan terstruktur untuk pemula hingga profesional</p>
+  </div>
+
+  <div id="app" class="grid">
+    <div class="card float">
+      <div class="icon">📄</div>
+      <div class="title">HTML Fundamental</div>
+      <div class="desc">Pelajari struktur dasar halaman web dengan HTML5. Dari elemen sederhana hingga semantic markup yang SEO-friendly.</div>
+      <ul class="features">
+        <li>Semantic HTML5</li>
+        <li>Forms & Validation</li>
+        <li>Accessibility (a11y)</li>
+      </ul>
+      <div class="badge">Pemula</div>
+    </div>
+
+    <div class="card float">
+      <div class="icon">🎨</div>
+      <div class="title">CSS Modern</div>
+      <div class="desc">Desain website yang responsif dan menarik menggunakan CSS3, Flexbox, Grid, dan animasi yang smooth.</div>
+      <ul class="features">
+        <li>Flexbox & Grid Layout</li>
+        <li>Animations & Transitions</li>
+        <li>Responsive Design</li>
+      </ul>
+      <div class="badge popular">Populer</div>
+    </div>
+
+    <div class="card float">
+      <div class="icon">⚡</div>
+      <div class="title">JavaScript ES6+</div>
+      <div class="desc">Kuasai bahasa pemrograman web paling populer. Dari dasar hingga konsep advanced seperti async/await dan modules.</div>
+      <ul class="features">
+        <li>ES6+ Syntax</li>
+        <li>DOM Manipulation</li>
+        <li>Async Programming</li>
+      </ul>
+      <div class="badge trending">Trending</div>
+    </div>
+
+    <div class="card float">
+      <div class="icon">⚛️</div>
+      <div class="title">React Framework</div>
+      <div class="desc">Bangun aplikasi web interaktif dengan React. Pelajari components, hooks, state management, dan best practices.</div>
+      <ul class="features">
+        <li>Components & Props</li>
+        <li>Hooks & State</li>
+        <li>Context API</li>
+      </ul>
+      <div class="badge">Advanced</div>
+    </div>
+
+    <div class="card float">
+      <div class="icon">🔧</div>
+      <div class="title">Node.js Backend</div>
+      <div class="desc">Kembangkan server-side applications dengan Node.js dan Express. Database integration, RESTful API, dan authentication.</div>
+      <ul class="features">
+        <li>Express Framework</li>
+        <li>REST API Design</li>
+        <li>Database Integration</li>
+      </ul>
+      <div class="badge">Backend</div>
+    </div>
+
+    <div class="card float">
+      <div class="icon">🚀</div>
+      <div class="title">Deploy & Hosting</div>
+      <div class="desc">Deploy aplikasi Anda ke production. Pelajari Git, GitHub, CI/CD, dan hosting di platform modern seperti Vercel dan Netlify.</div>
+      <ul class="features">
+        <li>Git Version Control</li>
+        <li>CI/CD Pipeline</li>
+        <li>Cloud Deployment</li>
+      </ul>
+      <div class="badge">DevOps</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>© 2024 Portal Pembelajaran Web Development - Mulai perjalanan coding Anda hari ini! 🚀</p>
+  </div>
+
+<script>
+  // Trigger staggered entrance animation
+  window.addEventListener('DOMContentLoaded', () => {
+    requestAnimationFrame(() => {
+      document.getElementById('app').classList.add('ready');
+    });
+  });
+
+  // Add click interaction
+  document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('click', function() {
+      // Add pulse effect
+      this.style.transform = 'scale(0.98)';
+      setTimeout(() => {
+        this.style.transform = '';
+      }, 150);
+    });
+  });
+
+  // Parallax effect on mouse move (optional enhancement)
+  document.addEventListener('mousemove', (e) => {
+    const cards = document.querySelectorAll('.card');
+    const x = e.clientX / window.innerWidth - 0.5;
+    const y = e.clientY / window.innerHeight - 0.5;
+    
+    cards.forEach(card => {
+      const speed = 5;
+      card.style.transform = `
+        translateX(${x * speed}px) 
+        translateY(${y * speed}px)
+      `;
+    });
+  });
+</script>
+</body>
+</html>

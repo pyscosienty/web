@@ -1,0 +1,732 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Contact — Hubungi Kami</title>
+<style>
+  :root{
+    --bg:#071028; 
+    --card:#0f1b2b; 
+    --accent:#6C63FF; 
+    --muted:#9fb0d6;
+    --success:#10b981;
+    --error:#ef4444;
+  }
+  
+  *{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+  }
+  
+  body{
+    font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background:linear-gradient(180deg,#041026 0%, #071028 60%);
+    color:#E6EEF8;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:100vh;
+    padding:28px;
+    position:relative;
+    overflow-x:hidden;
+  }
+  
+  /* Animated background particles */
+  .particles{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    pointer-events:none;
+    z-index:0;
+  }
+  
+  .particle{
+    position:absolute;
+    width:4px;
+    height:4px;
+    background:rgba(108,99,255,0.3);
+    border-radius:50%;
+    animation:float-particle 20s infinite ease-in-out;
+  }
+  
+  @keyframes float-particle{
+    0%, 100%{
+      transform:translate(0,0) scale(1);
+      opacity:0.3;
+    }
+    50%{
+      transform:translate(var(--tx), var(--ty)) scale(1.5);
+      opacity:0.6;
+    }
+  }
+  
+  .wrap{
+    width:100%;
+    max-width:900px;
+    display:grid;
+    grid-template-columns:1fr 400px;
+    gap:28px;
+    align-items:center;
+    position:relative;
+    z-index:1;
+  }
+  
+  .intro{
+    padding:28px;
+    border-radius:14px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    box-shadow:0 10px 30px rgba(4,8,20,0.6);
+    border:1px solid rgba(255,255,255,0.03);
+    transform:translateY(18px) scale(.99);
+    opacity:0;
+    animation:enter .6s cubic-bezier(.2,.9,.2,1) forwards;
+  }
+  
+  .card{
+    padding:22px;
+    border-radius:12px;
+    background:var(--card);
+    box-shadow:0 12px 30px rgba(3,6,20,0.6);
+    border:1px solid rgba(255,255,255,0.03);
+    transform:translateY(18px) scale(.99);
+    opacity:0;
+    animation:enter .6s cubic-bezier(.2,.9,.2,1) forwards;
+    animation-delay:.06s;
+    position:relative;
+  }
+  
+  @keyframes enter{
+    to{
+      transform:none;
+      opacity:1;
+    }
+  }
+  
+  h1{
+    margin:0 0 8px 0;
+    font-size:28px;
+    color:#F6F8FF;
+    font-weight:700;
+    background:linear-gradient(135deg, #F6F8FF 0%, var(--accent) 100%);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    background-clip:text;
+  }
+  
+  .subtitle{
+    font-size:16px;
+    line-height:1.6;
+    color:var(--muted);
+    margin-bottom:20px;
+  }
+  
+  p{
+    margin:0;
+    color:var(--muted);
+    line-height:1.6;
+  }
+  
+  .contact-meta{
+    margin-top:20px;
+    display:flex;
+    gap:12px;
+    flex-direction:column;
+  }
+  
+  .email-pill{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding:10px 16px;
+    border-radius:999px;
+    background:linear-gradient(90deg,var(--accent),#9B8CFF);
+    font-weight:600;
+    color:white;
+    text-decoration:none;
+    width:max-content;
+    box-shadow:0 8px 24px rgba(108,99,255,0.12);
+    transition:transform .2s, box-shadow .2s;
+  }
+  
+  .email-pill:hover{
+    transform:translateY(-2px);
+    box-shadow:0 12px 30px rgba(108,99,255,0.2);
+  }
+  
+  .email-pill:active{
+    transform:translateY(0);
+  }
+  
+  .info-box{
+    display:flex;
+    gap:12px;
+    padding:14px;
+    border-radius:10px;
+    background:rgba(108,99,255,0.05);
+    border:1px solid rgba(108,99,255,0.1);
+    align-items:center;
+  }
+  
+  .info-icon{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    background:rgba(108,99,255,0.12);
+    display:grid;
+    place-items:center;
+    font-size:20px;
+    flex-shrink:0;
+  }
+  
+  form{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+  
+  .field{
+    position:relative;
+  }
+  
+  input, textarea{
+    width:100%;
+    padding:14px 14px 14px 12px;
+    border-radius:10px;
+    border:1px solid rgba(255,255,255,0.04);
+    background:rgba(255,255,255,0.02);
+    color:inherit;
+    font-size:14px;
+    outline:none;
+    transition:all .2s ease;
+    font-family:inherit;
+  }
+  
+  textarea{
+    min-height:120px;
+    resize:vertical;
+  }
+  
+  input:focus, textarea:focus{
+    box-shadow:0 6px 22px rgba(108,99,255,0.08);
+    border-color:rgba(108,99,255,0.3);
+    background:rgba(255,255,255,0.03);
+    transform:translateY(-1px);
+  }
+  
+  input.error, textarea.error{
+    border-color:rgba(239,68,68,0.3);
+    box-shadow:0 0 0 3px rgba(239,68,68,0.05);
+  }
+  
+  label{
+    position:absolute;
+    left:12px;
+    top:14px;
+    pointer-events:none;
+    font-size:14px;
+    color:var(--muted);
+    transform-origin:left top;
+    transition:all .15s ease;
+  }
+  
+  .filled label, input:focus + label, textarea:focus + label{
+    transform:translateY(-24px) scale(.86);
+    color:#EAF0FF;
+    font-weight:500;
+  }
+  
+  .error-message{
+    font-size:12px;
+    color:var(--error);
+    margin-top:4px;
+    display:none;
+    animation:shake .3s;
+  }
+  
+  .error-message.show{
+    display:block;
+  }
+  
+  @keyframes shake{
+    0%, 100%{transform:translateX(0)}
+    25%{transform:translateX(-5px)}
+    75%{transform:translateX(5px)}
+  }
+  
+  .actions{
+    display:flex;
+    gap:10px;
+    align-items:center;
+    flex-wrap:wrap;
+    margin-top:8px;
+  }
+  
+  .btn{
+    background:linear-gradient(90deg,var(--accent),#9B8CFF);
+    color:white;
+    padding:12px 18px;
+    border-radius:10px;
+    border:0;
+    cursor:pointer;
+    font-weight:600;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    transition:all .2s;
+    font-size:14px;
+    position:relative;
+    overflow:hidden;
+  }
+  
+  .btn::before{
+    content:'';
+    position:absolute;
+    top:50%;
+    left:50%;
+    width:0;
+    height:0;
+    border-radius:50%;
+    background:rgba(255,255,255,0.2);
+    transform:translate(-50%, -50%);
+    transition:width .4s, height .4s;
+  }
+  
+  .btn:hover::before{
+    width:300px;
+    height:300px;
+  }
+  
+  .btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 20px rgba(108,99,255,0.3);
+  }
+  
+  .btn:active{
+    transform:translateY(0);
+  }
+  
+  .btn:disabled{
+    opacity:0.6;
+    cursor:not-allowed;
+    transform:none;
+  }
+  
+  .btn.ghost{
+    background:transparent;
+    border:1px solid rgba(255,255,255,0.08);
+    color:var(--muted);
+  }
+  
+  .btn.ghost:hover{
+    background:rgba(255,255,255,0.03);
+    border-color:rgba(255,255,255,0.15);
+  }
+  
+  .btn-group{
+    display:inline-flex;
+    border-radius:10px;
+    overflow:hidden;
+    box-shadow:0 4px 12px rgba(0,0,0,0.2);
+  }
+  
+  .btn-group .btn{
+    border-radius:0;
+    padding:12px 18px;
+  }
+  
+  .btn-group .btn.primary{
+    background:linear-gradient(90deg,var(--accent),#9B8CFF);
+    color:#fff;
+  }
+  
+  .btn-group .btn.icon{
+    background:rgba(108,99,255,0.8);
+    border-left:1px solid rgba(255,255,255,0.1);
+    min-width:50px;
+    justify-content:center;
+    padding:12px;
+  }
+  
+  .btn-group .btn.icon:hover{
+    background:rgba(108,99,255,1);
+  }
+  
+  .status{
+    font-size:13px;
+    color:var(--muted);
+  }
+  
+  .floaty{
+    animation:floaty 6s ease-in-out infinite;
+  }
+  
+  @keyframes floaty{
+    0%, 100%{transform:translateY(0)}
+    50%{transform:translateY(-8px)}
+  }
+  
+  .sent{
+    display:flex;
+    gap:12px;
+    align-items:center;
+    padding:16px;
+    border-radius:10px;
+    background:linear-gradient(135deg, rgba(16,185,129,0.1), rgba(16,185,129,0.05));
+    border:1px solid rgba(16,185,129,0.2);
+    animation:slideIn .4s ease-out;
+  }
+  
+  @keyframes slideIn{
+    from{
+      opacity:0;
+      transform:translateY(-10px);
+    }
+    to{
+      opacity:1;
+      transform:translateY(0);
+    }
+  }
+  
+  .success-check{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    background:rgba(16,185,129,0.2);
+    display:inline-grid;
+    place-items:center;
+    color:var(--success);
+    font-weight:700;
+    font-size:20px;
+    animation:pop .5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+  
+  @keyframes pop{
+    0%{
+      transform:scale(0);
+    }
+    50%{
+      transform:scale(1.2);
+    }
+    100%{
+      transform:scale(1);
+    }
+  }
+  
+  .loading-spinner{
+    width:16px;
+    height:16px;
+    border:2px solid rgba(255,255,255,0.3);
+    border-top-color:white;
+    border-radius:50%;
+    animation:spin .6s linear infinite;
+  }
+  
+  @keyframes spin{
+    to{transform:rotate(360deg)}
+  }
+  
+  .char-counter{
+    font-size:12px;
+    color:var(--muted);
+    text-align:right;
+    margin-top:4px;
+  }
+  
+  .char-counter.warning{
+    color:#fbbf24;
+  }
+  
+  .char-counter.error{
+    color:var(--error);
+  }
+
+  /* Responsive design */
+  @media (max-width:880px){
+    .wrap{
+      grid-template-columns:1fr;
+    }
+    .card{
+      order:2;
+    }
+    h1{
+      font-size:24px;
+    }
+  }
+  
+  @media (max-width:480px){
+    body{
+      padding:16px;
+    }
+    .intro, .card{
+      padding:20px;
+    }
+    h1{
+      font-size:22px;
+    }
+  }
+</style>
+</head>
+<body>
+  <!-- Animated background particles -->
+  <div class="particles" id="particles"></div>
+
+  <div class="wrap">
+    <div class="intro floaty">
+      <h1>Hubungi Kami</h1>
+      <p class="subtitle">Ada pertanyaan atau ingin bekerja sama? Kami siap membantu Anda!</p>
+      <p>Isi formulir di samping atau kirim email langsung ke alamat berikut:</p>
+      <div class="contact-meta">
+        <a class="email-pill" href="mailto:yourname@gmail.com">
+          📧 yourname@gmail.com
+        </a>
+        <div class="info-box">
+          <div class="info-icon">⏱️</div>
+          <div>
+            <strong style="color:#F6F8FF">Waktu Respons</strong>
+            <p class="status">Biasanya dibalas dalam 1–2 hari kerja</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <form id="contactForm" novalidate>
+        <div class="field" data-name="name">
+          <input 
+            id="name" 
+            name="name" 
+            required 
+            autocomplete="name"
+            maxlength="100"
+          />
+          <label for="name">Nama Lengkap *</label>
+          <div class="error-message" data-error="name">Nama harus diisi</div>
+        </div>
+        
+        <div class="field" data-name="email">
+          <input 
+            id="email" 
+            name="email" 
+            type="email" 
+            required 
+            autocomplete="email"
+            maxlength="100"
+          />
+          <label for="email">Alamat Email *</label>
+          <div class="error-message" data-error="email">Email tidak valid</div>
+        </div>
+        
+        <div class="field" data-name="message">
+          <textarea 
+            id="message" 
+            name="message" 
+            required
+            maxlength="1000"
+          ></textarea>
+          <label for="message">Pesan Anda *</label>
+          <div class="error-message" data-error="message">Pesan harus diisi (min. 10 karakter)</div>
+          <div class="char-counter" id="charCounter">0 / 1000 karakter</div>
+        </div>
+
+        <div class="actions">
+          <div class="btn-group" role="group" aria-label="Tindakan kirim">
+            <button class="btn primary" type="submit" id="sendBtn">
+              <span id="btnText">Kirim Pesan</span>
+            </button>
+            <button class="btn icon" type="button" id="mailtoBtn" title="Buka di Gmail">
+              📧
+            </button>
+          </div>
+          <button class="btn ghost" type="reset" id="resetBtn">Reset</button>
+        </div>
+
+        <div id="resultArea" style="margin-top:12px;display:none"></div>
+      </form>
+    </div>
+  </div>
+
+<script>
+  // Generate animated background particles
+  function createParticles(){
+    const container = document.getElementById('particles');
+    for(let i = 0; i < 15; i++){
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+      particle.style.left = Math.random() * 100 + '%';
+      particle.style.top = Math.random() * 100 + '%';
+      particle.style.setProperty('--tx', (Math.random() - 0.5) * 200 + 'px');
+      particle.style.setProperty('--ty', (Math.random() - 0.5) * 200 + 'px');
+      particle.style.animationDelay = Math.random() * 10 + 's';
+      particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+      container.appendChild(particle);
+    }
+  }
+  createParticles();
+
+  // Form UX with enhanced animations
+  const form = document.getElementById('contactForm');
+  const fields = Array.from(form.querySelectorAll('.field'));
+  
+  fields.forEach(f => {
+    const input = f.querySelector('input, textarea');
+    const errorMsg = f.querySelector('.error-message');
+    
+    const updateLabel = () => {
+      if(input.value.trim()){
+        f.classList.add('filled');
+      } else {
+        f.classList.remove('filled');
+      }
+    };
+    
+    input.addEventListener('input', updateLabel);
+    input.addEventListener('blur', updateLabel);
+    input.addEventListener('focus', () => {
+      input.classList.remove('error');
+      if(errorMsg) errorMsg.classList.remove('show');
+    });
+    
+    updateLabel();
+  });
+
+  // Character counter for message
+  const messageField = document.getElementById('message');
+  const charCounter = document.getElementById('charCounter');
+  
+  messageField.addEventListener('input', () => {
+    const length = messageField.value.length;
+    const max = 1000;
+    charCounter.textContent = `${length} / ${max} karakter`;
+    
+    charCounter.classList.remove('warning', 'error');
+    if(length > max * 0.9){
+      charCounter.classList.add('warning');
+    }
+    if(length >= max){
+      charCounter.classList.add('error');
+    }
+  });
+
+  // Form validation
+  function validateEmail(email){
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
+  function validateForm(){
+    let isValid = true;
+    const nameInput = document.getElementById('name');
+    const emailInput = document.getElementById('email');
+    const messageInput = document.getElementById('message');
+    
+    // Validate name
+    if(nameInput.value.trim().length < 2){
+      showError('name', 'Nama harus diisi (min. 2 karakter)');
+      isValid = false;
+    }
+    
+    // Validate email
+    if(!validateEmail(emailInput.value.trim())){
+      showError('email', 'Alamat email tidak valid');
+      isValid = false;
+    }
+    
+    // Validate message
+    if(messageInput.value.trim().length < 10){
+      showError('message', 'Pesan harus diisi (min. 10 karakter)');
+      isValid = false;
+    }
+    
+    return isValid;
+  }
+
+  function showError(fieldName, message){
+    const errorMsg = document.querySelector(`[data-error="${fieldName}"]`);
+    const input = document.getElementById(fieldName);
+    
+    if(errorMsg){
+      errorMsg.textContent = message;
+      errorMsg.classList.add('show');
+    }
+    if(input){
+      input.classList.add('error');
+    }
+  }
+
+  // Form submission
+  const sendBtn = document.getElementById('sendBtn');
+  const btnText = document.getElementById('btnText');
+  const resultArea = document.getElementById('resultArea');
+  const resetBtn = document.getElementById('resetBtn');
+
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    
+    if(!validateForm()){
+      return;
+    }
+    
+    // Disable button and show loading
+    sendBtn.disabled = true;
+    btnText.innerHTML = '<div class="loading-spinner"></div> Mengirim...';
+    
+    // Simulate sending (replace with actual API call)
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    // Show success message
+    btnText.innerHTML = '✓ Terkirim!';
+    resultArea.style.display = 'block';
+    resultArea.innerHTML = `
+      <div class="sent">
+        <div class="success-check">✓</div>
+        <div>
+          <strong style="color:#F6F8FF">Pesan Berhasil Dikirim!</strong>
+          <div class="status">Terima kasih telah menghubungi kami. Kami akan merespons secepatnya.</div>
+        </div>
+      </div>
+    `;
+    
+    // Reset form after delay
+    setTimeout(() => {
+      form.reset();
+      fields.forEach(f => f.classList.remove('filled'));
+      resultArea.style.display = 'none';
+      sendBtn.disabled = false;
+      btnText.textContent = 'Kirim Pesan';
+      charCounter.textContent = '0 / 1000 karakter';
+    }, 5000);
+  });
+
+  // Reset button
+  resetBtn.addEventListener('click', () => {
+    fields.forEach(f => {
+      f.classList.remove('filled');
+      const input = f.querySelector('input, textarea');
+      const errorMsg = f.querySelector('.error-message');
+      if(input) input.classList.remove('error');
+      if(errorMsg) errorMsg.classList.remove('show');
+    });
+    resultArea.style.display = 'none';
+    charCounter.textContent = '0 / 1000 karakter';
+  });
+
+  // Gmail button
+  const mailtoBtn = document.getElementById('mailtoBtn');
+  mailtoBtn.addEventListener('click', () => {
+    const name = encodeURIComponent(document.getElementById('name').value || 'Nama Anda');
+    const email = encodeURIComponent(document.getElementById('email').value || '');
+    const message = document.getElementById('message').value || '';
+    const body = encodeURIComponent(`${message}\n\n—\nDari: ${name}\nEmail: ${email}`);
+    
+    const to = 'yourname@gmail.com';
+    const subject = encodeURIComponent('Pesan dari Website Contact Form');
+    const mailto = `mailto:${to}?subject=${subject}&body=${body}`;
+    
+    window.location.href = mailto;
+  });
+</script>
+</body>
+</html>
